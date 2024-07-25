@@ -14,5 +14,36 @@ headers = {
 
 response = requests.get(url=URL, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
-print(soup.text)
+# print(soup.text)
+
+link_list = []
+prices_list = []
+location_list = []
+
+links = soup.find_all(name="a", class_="StyledPropertyCardDataArea-anchor")
+for link in links:
+    href = link.get("href")
+    link_list.append(href)
+print(link_list)
+
+prices = soup.find_all(name="span", class_="PropertyCardWrapper__StyledPriceLine")
+for price in prices:
+    formated_text = (price.getText().replace("+/mo", "")
+                                    .replace("+ 1 bd", "")
+                                    .replace("/mo", ""))
+    link_list.append(formated_text)
+print(link_list)
+
+locations = soup.find_all(name="address")
+for location in locations:
+    text = location.getText().strip()
+    location_list.append(text)
+print(location_list)
+
+
+
+
+
+
+
 
