@@ -1,8 +1,10 @@
+import pandas
 from bs4 import BeautifulSoup
 import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
+import pandas as pd
 
 URL = "https://appbrewery.github.io/Zillow-Clone/"
 FORM_LINK = "https://forms.gle/QhXDVSQdxpnm9JbLA"
@@ -46,23 +48,35 @@ for location in locations:
 
 # ------------------------------------- Selenium -----------------------------------------
 
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_experimental_option("detach", True)
+# chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_experimental_option("detach", True)
+#
+# driver = webdriver.Chrome(options=chrome_options)
+#
+# for i in range(0, len(links) - 1):
+#     driver.get(FORM_LINK)
+#     f_address = driver.find_element(By.XPATH, value='//*[@id="mG61Hd"]/div[2]/div/div[2]/div[1]'
+#                                                     '/div/div/div[2]/div/div[1]/div/div[1]/input')
+#     f_price = driver.find_element(By.XPATH, value='//*[@id="mG61Hd"]/div[2]/div/div[2]/div'
+#                                                   '[2]/div/div/div[2]/div/div[1]/div/div[1]/input')
+#     f_link = driver.find_element(By.XPATH, value='//*[@id="mG61Hd"]/div[2]/div/div[2]/div[3]'
+#                                                  '/div/div/div[2]/div/div[1]/div/div[1]/input')
+#     time.sleep(1)
+#     f_address.send_keys(location_list[i])
+#     f_price.send_keys(price_list[i])
+#     f_link.send_keys(link_list[i])
+#
+#     submit = driver.find_element(By.CLASS_NAME, value="QvWxOd")
+#     submit.click()
 
-driver = webdriver.Chrome(options=chrome_options)
+# ------------------------------------- Pandas -----------------------------------------
 
-for i in range(0, len(links) - 1):
-    driver.get(FORM_LINK)
-    f_address = driver.find_element(By.XPATH, value='//*[@id="mG61Hd"]/div[2]/div/div[2]/div[1]'
-                                                    '/div/div/div[2]/div/div[1]/div/div[1]/input')
-    f_price = driver.find_element(By.XPATH, value='//*[@id="mG61Hd"]/div[2]/div/div[2]/div'
-                                                  '[2]/div/div/div[2]/div/div[1]/div/div[1]/input')
-    f_link = driver.find_element(By.XPATH, value='//*[@id="mG61Hd"]/div[2]/div/div[2]/div[3]'
-                                                 '/div/div/div[2]/div/div[1]/div/div[1]/input')
-    time.sleep(1)
-    f_address.send_keys(location_list[i])
-    f_price.send_keys(price_list[i])
-    f_link.send_keys(link_list[i])
+data = {
+    "Address": location_list,
+    "Price": price_list,
+    "Link": link_list,
+}
 
-    submit = driver.find_element(By.CLASS_NAME, value="QvWxOd")
-    submit.click()
+df = pandas.DataFrame(data)
+csv_file = "data.csv"
+df.to_csv(csv_file, index=False)
